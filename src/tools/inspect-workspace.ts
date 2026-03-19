@@ -128,6 +128,13 @@ export async function handleInspectWorkspaceTool(input: InspectWorkspaceInput) {
     for (const relativePath of filteredPaths) {
       const absolutePath = path.join(realDir, relativePath);
       try {
+        // Security: resolve symlinks and verify file is within workspace root
+        const realFilePath = await realpath(absolutePath);
+        if (!realFilePath.startsWith(realDir + path.sep) && realFilePath !== realDir) {
+          logger.warn({ file: relativePath, resolved: realFilePath }, 'Skipping symlink outside workspace root');
+          continue;
+        }
+
         const content = await readVBAFile(absolutePath);
         const moduleName = path.basename(relativePath, path.extname(relativePath));
 
@@ -175,6 +182,12 @@ export async function handleInspectWorkspaceTool(input: InspectWorkspaceInput) {
     for (const relativePath of filteredPaths) {
       const absolutePath = path.join(realDir, relativePath);
       try {
+        // Security: resolve symlinks and verify file is within workspace root
+        const realFilePath = await realpath(absolutePath);
+        if (!realFilePath.startsWith(realDir + path.sep) && realFilePath !== realDir) {
+          continue; // Already logged in Phase 1
+        }
+
         const content = await readVBAFile(absolutePath);
         let parseResult = parseCache.get(content);
         if (!parseResult) {
