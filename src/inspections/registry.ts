@@ -10,17 +10,121 @@ import type { InspectionMetadata } from './base.js';
 // This provides compile-time safety — missing imports cause build errors.
 // =================================================================
 
-// --- Phase 2: Tier A (Parse-Tree) Inspections ---
+// --- Tier A: Empty Blocks ---
 import { EmptyIfBlockInspection } from './parse-tree/empty-blocks/empty-if-block.js';
+import { EmptyElseBlockInspection } from './parse-tree/empty-blocks/empty-else-block.js';
+import { EmptyCaseBlockInspection } from './parse-tree/empty-blocks/empty-case-block.js';
+import { EmptyForLoopBlockInspection } from './parse-tree/empty-blocks/empty-for-loop-block.js';
+import { EmptyForEachBlockInspection } from './parse-tree/empty-blocks/empty-for-each-block.js';
+import { EmptyWhileWendBlockInspection } from './parse-tree/empty-blocks/empty-while-wend-block.js';
+import { EmptyDoWhileBlockInspection } from './parse-tree/empty-blocks/empty-do-while-block.js';
+import { EmptyMethodInspection } from './parse-tree/empty-blocks/empty-method.js';
+import { EmptyModuleInspection } from './parse-tree/empty-blocks/empty-module.js';
+
+// --- Tier A: Obsolete Syntax ---
+import { ObsoleteLetStatementInspection } from './parse-tree/obsolete-syntax/obsolete-let-statement.js';
+import { ObsoleteCallStatementInspection } from './parse-tree/obsolete-syntax/obsolete-call-statement.js';
+import { ObsoleteGlobalInspection } from './parse-tree/obsolete-syntax/obsolete-global.js';
+import { ObsoleteWhileWendStatementInspection } from './parse-tree/obsolete-syntax/obsolete-while-wend-statement.js';
+import { ObsoleteCommentSyntaxInspection } from './parse-tree/obsolete-syntax/obsolete-comment-syntax.js';
+import { ObsoleteTypeHintInspection } from './parse-tree/obsolete-syntax/obsolete-type-hint.js';
+import { StopKeywordInspection } from './parse-tree/obsolete-syntax/stop-keyword.js';
+import { EndKeywordInspection } from './parse-tree/obsolete-syntax/end-keyword.js';
+import { DefTypeStatementInspection } from './parse-tree/obsolete-syntax/def-type-statement.js';
+
+// --- Tier A: Declarations ---
+import { OptionExplicitInspection } from './parse-tree/declarations/option-explicit.js';
+import { OptionBaseZeroOrOneInspection } from './parse-tree/declarations/option-base-zero-or-one.js';
+import { MultipleDeclarationsInspection } from './parse-tree/declarations/multiple-declarations.js';
+import { ImplicitByRefModifierInspection } from './parse-tree/declarations/implicit-byref-modifier.js';
+import { ImplicitPublicMemberInspection } from './parse-tree/declarations/implicit-public-member.js';
+import { ImplicitVariantReturnTypeInspection } from './parse-tree/declarations/implicit-variant-return-type.js';
+import { RedundantByRefModifierInspection } from './parse-tree/declarations/redundant-byref-modifier.js';
+
+// --- Tier A: Code Quality ---
+import { BooleanAssignedInIfElseInspection } from './parse-tree/code-quality/boolean-assigned-in-if-else.js';
+import { SelfAssignedDeclarationInspection } from './parse-tree/code-quality/self-assigned-declaration.js';
+import { UnreachableCodeInspection } from './parse-tree/code-quality/unreachable-code.js';
+import { LineContinuationBetweenKeywordsInspection } from './parse-tree/code-quality/line-continuation-between-keywords.js';
+import { OnLocalErrorInspection } from './parse-tree/code-quality/on-local-error.js';
+import { StepNotSpecifiedInspection } from './parse-tree/code-quality/step-not-specified.js';
+import { StepOneIsRedundantInspection } from './parse-tree/code-quality/step-one-is-redundant.js';
+
+// --- Tier A: Error Handling ---
+import { UnhandledOnErrorResumeNextInspection } from './parse-tree/error-handling/unhandled-on-error-resume-next.js';
+import { OnErrorGoToMinusOneInspection } from './parse-tree/error-handling/on-error-goto-minus-one.js';
+import { EmptyStringLiteralInspection } from './parse-tree/error-handling/empty-string-literal.js';
+import { IsMissingOnInappropriateArgumentInspection } from './parse-tree/error-handling/is-missing-on-inappropriate-argument.js';
+import { IsMissingWithNonArgumentParameterInspection } from './parse-tree/error-handling/is-missing-with-non-argument-parameter.js';
+
+// --- Tier A: Excel ---
+import { ImplicitActiveSheetReferenceInspection } from './parse-tree/excel/implicit-active-sheet-reference.js';
+import { ImplicitActiveWorkbookReferenceInspection } from './parse-tree/excel/implicit-active-workbook-reference.js';
+import { SheetAccessedUsingStringInspection } from './parse-tree/excel/sheet-accessed-using-string.js';
+import { ApplicationWorksheetFunctionInspection } from './parse-tree/excel/application-worksheet-function.js';
+import { ExcelMemberMayReturnNothingInspection } from './parse-tree/excel/excel-member-may-return-nothing.js';
+import { ExcelUdfNameIsValidCellReferenceInspection } from './parse-tree/excel/excel-udf-name-is-valid-cell-reference.js';
 
 /**
  * Master registry of all inspection classes.
  * Order does not matter — the runner handles tiering and filtering.
  */
 export const ALL_INSPECTIONS: Array<new () => InspectionBase> = [
-  // Tier A: Parse-Tree Inspections
+  // Tier A: Empty Blocks
   EmptyIfBlockInspection,
-  // More Tier A inspections added in Phase 2
+  EmptyElseBlockInspection,
+  EmptyCaseBlockInspection,
+  EmptyForLoopBlockInspection,
+  EmptyForEachBlockInspection,
+  EmptyWhileWendBlockInspection,
+  EmptyDoWhileBlockInspection,
+  EmptyMethodInspection,
+  EmptyModuleInspection,
+
+  // Tier A: Obsolete Syntax
+  ObsoleteLetStatementInspection,
+  ObsoleteCallStatementInspection,
+  ObsoleteGlobalInspection,
+  ObsoleteWhileWendStatementInspection,
+  ObsoleteCommentSyntaxInspection,
+  ObsoleteTypeHintInspection,
+  StopKeywordInspection,
+  EndKeywordInspection,
+  DefTypeStatementInspection,
+
+  // Tier A: Declarations
+  OptionExplicitInspection,
+  OptionBaseZeroOrOneInspection,
+  MultipleDeclarationsInspection,
+  ImplicitByRefModifierInspection,
+  ImplicitPublicMemberInspection,
+  ImplicitVariantReturnTypeInspection,
+  RedundantByRefModifierInspection,
+
+  // Tier A: Code Quality
+  BooleanAssignedInIfElseInspection,
+  SelfAssignedDeclarationInspection,
+  UnreachableCodeInspection,
+  LineContinuationBetweenKeywordsInspection,
+  OnLocalErrorInspection,
+  StepNotSpecifiedInspection,
+  StepOneIsRedundantInspection,
+
+  // Tier A: Error Handling
+  UnhandledOnErrorResumeNextInspection,
+  OnErrorGoToMinusOneInspection,
+  EmptyStringLiteralInspection,
+  IsMissingOnInappropriateArgumentInspection,
+  IsMissingWithNonArgumentParameterInspection,
+
+  // Tier A: Excel
+  ImplicitActiveSheetReferenceInspection,
+  ImplicitActiveWorkbookReferenceInspection,
+  SheetAccessedUsingStringInspection,
+  ApplicationWorksheetFunctionInspection,
+  ExcelMemberMayReturnNothingInspection,
+  ExcelUdfNameIsValidCellReferenceInspection,
+
   // Tier B inspections added in Phase 4
 ];
 
