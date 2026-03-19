@@ -94,5 +94,5 @@ public
 # Serverless directories
 .serverless/
 
-# ANTLR4 generated sources (if auto-generated)
-src/generated/
+# ANTLR4 generated sources
+src/parser/generated/

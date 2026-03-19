@@ -1,0 +1,52 @@
+{
+  "name": "vba-lint-mcp",
+  "version": "0.1.0",
+  "description": "MCP server providing VBA code inspections, linting, and parse tree analysis",
+  "type": "module",
+  "main": "dist/server.js",
+  "bin": {
+    "vba-lint-mcp": "dist/server.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsx src/server.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/ test/",
+    "generate-parser": "antlr4ng -Dlanguage=TypeScript -visitor -listener -o src/parser/generated grammar/VBALexer.g4 grammar/VBAParser.g4",
+    "clean": "rm -rf dist src/parser/generated",
+    "prepublishOnly": "npm run clean && npm run generate-parser && npm run build"
+  },
+  "keywords": [
+    "vba",
+    "mcp",
+    "linting",
+    "code-analysis",
+    "antlr4",
+    "rubberduck"
+  ],
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/devinmlowe/vba-lint-mcp.git"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.12.1",
+    "antlr4ng": "3.0.16",
+    "micromatch": "4.0.8",
+    "pino": "9.6.0",
+    "zod": "3.24.2"
+  },
+  "devDependencies": {
+    "@types/micromatch": "4.0.9",
+    "@types/node": "22.13.10",
+    "antlr4ng-cli": "2.0.0",
+    "eslint": "9.22.0",
+    "tsx": "4.19.3",
+    "typescript": "5.8.2",
+    "vitest": "3.0.9"
+  }
+}
