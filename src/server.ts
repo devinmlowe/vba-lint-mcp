@@ -20,9 +20,13 @@ async function main() {
   logger.info({ version: VERSION }, 'vba-lint-mcp starting');
 
   // Validate inspection registry
-  const registryErrors = validateRegistry();
-  if (registryErrors.length > 0) {
-    logger.error({ errors: registryErrors }, 'Inspection registry validation failed');
+  const { critical, warnings } = validateRegistry();
+  if (warnings.length > 0) {
+    logger.warn({ warnings }, 'Inspection registry validation warnings');
+  }
+  if (critical.length > 0) {
+    logger.error({ errors: critical }, 'Inspection registry validation failed');
+    throw new Error(`Registry validation failed: ${critical.join('; ')}`);
   }
 
   // Warm up ANTLR4 parser (initializes ATN/DFA caches)

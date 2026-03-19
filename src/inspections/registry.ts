@@ -216,44 +216,58 @@ export function getAllInspectionMetadata(): InspectionMetadata[] {
   return ALL_INSPECTIONS.map(Cls => (Cls as unknown as typeof InspectionBase).meta);
 }
 
+export interface RegistryValidationResult {
+  /** Critical errors that should block startup (duplicate IDs, missing meta) */
+  critical: string[];
+  /** Warnings that allow continued operation (missing descriptions) */
+  warnings: string[];
+}
+
 /**
  * Validate the registry at startup.
- * Returns errors for any issues found.
+ * Returns critical errors and warnings separately.
+ * Critical errors (duplicate IDs, missing meta/id/tier/severity) should block startup.
+ * Warnings (missing descriptions) are informational.
  */
-export function validateRegistry(): string[] {
-  const errors: string[] = [];
+export function validateRegistry(): RegistryValidationResult {
+  const critical: string[] = [];
+  const warnings: string[] = [];
   const ids = new Set<string>();
 
   for (const Cls of ALL_INSPECTIONS) {
     const meta = (Cls as unknown as typeof InspectionBase).meta;
 
     if (!meta) {
-      errors.push(`Inspection class ${Cls.name} is missing static 'meta' property`);
+      critical.push(`Inspection class ${Cls.name} is missing static 'meta' property`);
       continue;
     }
 
     if (!meta.id) {
-      errors.push(`Inspection class ${Cls.name} has empty 'id' in meta`);
+      critical.push(`Inspection class ${Cls.name} has empty 'id' in meta`);
       continue;
     }
 
     if (ids.has(meta.id)) {
-      errors.push(`Duplicate inspection ID: ${meta.id}`);
+      critical.push(`Duplicate inspection ID: ${meta.id}`);
     }
     ids.add(meta.id);
 
     if (!meta.tier || !['A', 'B'].includes(meta.tier)) {
-      errors.push(`Inspection ${meta.id} has invalid tier: ${meta.tier}`);
+      critical.push(`Inspection ${meta.id} has invalid tier: ${meta.tier}`);
     }
 
     if (!meta.category) {
-      errors.push(`Inspection ${meta.id} has no category`);
+      critical.push(`Inspection ${meta.id} has no category`);
     }
 
     if (!meta.defaultSeverity) {
-      errors.push(`Inspection ${meta.id} has no defaultSeverity`);
+      critical.push(`Inspection ${meta.id} has no defaultSeverity`);
+    }
+
+    if (!meta.description) {
+      warnings.push(`Inspection ${meta.id} has no description`);
     }
   }
 
-  return errors;
+  return { critical, warnings };
 }

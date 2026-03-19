@@ -28,9 +28,9 @@ function runAllTierBInspections(code: string) {
 }
 
 describe('Tier B Interaction Tests', () => {
-  it('registry validates with no errors', () => {
-    const errors = validateRegistry();
-    expect(errors).toHaveLength(0);
+  it('registry validates with no critical errors', () => {
+    const { critical } = validateRegistry();
+    expect(critical).toHaveLength(0);
   });
 
   it('clean code fixture produces minimal findings', async () => {
