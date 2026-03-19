@@ -136,20 +136,21 @@ class ReferenceResolverListener extends VBAParserListener {
   // --- Assignment detection ---
 
   override enterLetStmt = (ctx: LetStmtContext): void => {
-    // The lExpression on the LHS is an assignment target
+    // The lExpression on the LHS is an assignment target (Let assignment)
     const lExpr = ctx.lExpression();
     if (lExpr instanceof SimpleNameExprContext) {
       const name = lExpr.identifier().getText();
-      this.addReference(name, locationFromNode(lExpr), true);
+      this.addReference(name, locationFromNode(lExpr), true, false);
     }
     // Note: For MemberAccessExpr on LHS, we skip for now (cross-module)
   };
 
   override enterSetStmt = (ctx: SetStmtContext): void => {
+    // The lExpression on the LHS is a Set assignment target
     const lExpr = ctx.lExpression();
     if (lExpr instanceof SimpleNameExprContext) {
       const name = lExpr.identifier().getText();
-      this.addReference(name, locationFromNode(lExpr), true);
+      this.addReference(name, locationFromNode(lExpr), true, true);
     }
   };
 
@@ -163,7 +164,7 @@ class ReferenceResolverListener extends VBAParserListener {
     }
 
     const name = ctx.identifier().getText();
-    this.addReference(name, locationFromNode(ctx), false);
+    this.addReference(name, locationFromNode(ctx), false, false);
   };
 
   // --- Helpers ---
@@ -175,7 +176,7 @@ class ReferenceResolverListener extends VBAParserListener {
     );
   }
 
-  private addReference(name: string, location: SourceLocation, isAssignment: boolean): void {
+  private addReference(name: string, location: SourceLocation, isAssignment: boolean, isSetAssignment: boolean): void {
     const scope = this.currentProcedure ?? this.moduleDecl;
     const resolved = resolveSimpleName(name, scope, this.scopeMap, this.declarations);
 
@@ -184,6 +185,7 @@ class ReferenceResolverListener extends VBAParserListener {
       location,
       declaration: resolved,
       isAssignment,
+      isSetAssignment,
     };
 
     if (resolved) {

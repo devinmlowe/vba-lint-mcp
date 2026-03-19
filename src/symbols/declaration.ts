@@ -50,6 +50,8 @@ export interface IdentifierReference {
   declaration?: Declaration;
   /** True if this reference is an assignment target (lValue) */
   isAssignment: boolean;
+  /** True if this reference is a Set assignment (Set x = ...) */
+  isSetAssignment: boolean;
 }
 
 /**

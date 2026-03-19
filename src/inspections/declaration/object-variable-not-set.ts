@@ -52,9 +52,10 @@ export class ObjectVariableNotSetInspection extends DeclarationInspection {
       if (!decl.asTypeName) continue;
       if (!OBJECT_TYPE_NAMES.has(decl.asTypeName.toLowerCase())) continue;
 
-      // Check for assignment references (these are potential Set violations)
+      // Check for Let-assignment references (missing Set keyword)
+      // Skip Set assignments — they already have the Set keyword
       for (const ref of decl.references) {
-        if (ref.isAssignment) {
+        if (ref.isAssignment && !ref.isSetAssignment) {
           results.push(
             this.createResult(ref.location, {
               description: `'${decl.name}' is an object variable — assignment may require 'Set'.`,
