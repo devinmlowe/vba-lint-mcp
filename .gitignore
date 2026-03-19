@@ -96,3 +96,4 @@ public
 
 # ANTLR4 generated sources
 src/parser/generated/
+.claude/worktrees/
