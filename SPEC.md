@@ -35,7 +35,7 @@ MCP Tools (server.ts)
 Inspection Runner (tiered execution)
     |
     +-- Tier A: Parse-Tree Inspections (43 inspections)
-    +-- Tier B: Declaration/Reference Inspections (18 inspections)
+    +-- Tier B: Declaration/Reference Inspections (22 inspections)
     |
     v
 Symbol Resolution (2-pass)
@@ -66,7 +66,7 @@ Grammar Files (VBALexer.g4, VBAParser.g4)
 | Tier | Infrastructure | Count |
 |---|---|---|
 | A | Parse tree only | 43 |
-| B | Parse tree + symbol table | 18 |
+| B | Parse tree + symbol table | 22 |
 | C (out of scope) | COM type library / VBE runtime | ~25-30 |
 
 ## Configuration

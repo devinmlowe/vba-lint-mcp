@@ -44,7 +44,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Workspace context for multi-module symbol resolution
 - Scope chain resolution (module-level, procedure-level, block-level)
 
-### Phase 4: Tier B Inspections (18 inspections)
+### Phase 4: Tier B Inspections (22 inspections)
 
 - **Unused Code (7):** VariableNotUsed, ParameterNotUsed, ConstantNotUsed, ProcedureNotUsed, LineLabelNotUsed, VariableNotAssigned, UnassignedVariableUsage
 - **Naming (3):** HungarianNotation, UseMeaningfulName, UnderscoreInPublicClassModuleMember
