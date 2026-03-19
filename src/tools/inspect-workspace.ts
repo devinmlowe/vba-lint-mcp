@@ -221,6 +221,7 @@ export async function handleInspectWorkspaceTool(input: InspectWorkspaceInput) {
 
     // Apply limit
     const limitedResults = allResults.slice(0, input.limit);
+    const totalCount = allResults.length;
     const elapsed = Date.now() - startTime;
 
     if (input.detailed) {
@@ -234,16 +235,16 @@ export async function handleInspectWorkspaceTool(input: InspectWorkspaceInput) {
         engineVersion: VERSION,
       };
 
-      const summary = buildTextSummary(allResults, filteredPaths.length, elapsed, fileReadErrors);
+      const summary = buildTextSummary(limitedResults, totalCount, filteredPaths.length, elapsed, fileReadErrors);
       return {
         content: [{ type: 'text' as const, text: summary }],
         structuredContent: response,
       };
     } else {
       // Summary mode: counts by severity, by file, top inspections
-      const summaryData = buildSummaryData(allResults, filteredPaths.length);
+      const summaryData = buildSummaryData(limitedResults, totalCount, filteredPaths.length);
 
-      const summary = buildTextSummary(allResults, filteredPaths.length, elapsed, fileReadErrors);
+      const summary = buildTextSummary(limitedResults, totalCount, filteredPaths.length, elapsed, fileReadErrors);
       return {
         content: [{ type: 'text' as const, text: summary }],
         structuredContent: summaryData,
@@ -260,6 +261,7 @@ export async function handleInspectWorkspaceTool(input: InspectWorkspaceInput) {
 
 function buildTextSummary(
   results: InspectionResult[],
+  totalCount: number,
   fileCount: number,
   elapsed: number,
   fileReadErrors: string[],
@@ -277,9 +279,16 @@ function buildTextSummary(
   if (counts.suggestion) parts.push(`${counts.suggestion} suggestion(s)`);
   if (counts.hint) parts.push(`${counts.hint} hint(s)`);
 
-  const summary = parts.length > 0
-    ? `Found ${parts.join(', ')} across ${fileCount} file(s) (${elapsed}ms).`
-    : `No issues found across ${fileCount} file(s) (${elapsed}ms).`;
+  let summary: string;
+  if (parts.length > 0) {
+    summary = `Found ${parts.join(', ')} across ${fileCount} file(s) (${elapsed}ms).`;
+  } else {
+    summary = `No issues found across ${fileCount} file(s) (${elapsed}ms).`;
+  }
+
+  if (results.length < totalCount) {
+    summary += ` Showing ${results.length} of ${totalCount} total results.`;
+  }
 
   const extras: string[] = [];
   if (fileReadErrors.length > 0) {
@@ -291,6 +300,7 @@ function buildTextSummary(
 
 function buildSummaryData(
   results: InspectionResult[],
+  totalCount: number,
   fileCount: number,
 ): WorkspaceSummary {
   // Counts by severity
@@ -321,7 +331,7 @@ function buildSummaryData(
 
   return {
     fileCount,
-    totalResults: results.length,
+    totalResults: totalCount,
     bySeverity,
     byFile,
     topInspections,
