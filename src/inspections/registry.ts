@@ -70,6 +70,39 @@ import { VariableNotUsedInspection } from './declaration/variable-not-used.js';
 import { ParameterNotUsedInspection } from './declaration/parameter-not-used.js';
 import { NonReturningFunctionInspection } from './declaration/non-returning-function.js';
 
+// --- Tier B: Unused Code ---
+import { ConstantNotUsedInspection } from './declaration/constant-not-used.js';
+import { ProcedureNotUsedInspection } from './declaration/procedure-not-used.js';
+import { LineLabelNotUsedInspection } from './declaration/line-label-not-used.js';
+import { VariableNotAssignedInspection } from './declaration/variable-not-assigned.js';
+
+// --- Tier B: Naming ---
+import { HungarianNotationInspection } from './declaration/hungarian-notation.js';
+import { UseMeaningfulNameInspection } from './declaration/use-meaningful-name.js';
+import { UnderscoreInPublicClassModuleMemberInspection } from './declaration/underscore-in-public-class-module-member.js';
+
+// --- Tier B: Types ---
+import { ObjectVariableNotSetInspection } from './declaration/object-variable-not-set.js';
+import { IntegerDataTypeInspection } from './declaration/integer-data-type.js';
+import { VariableTypeNotDeclaredInspection } from './declaration/variable-type-not-declared.js';
+
+// --- Tier B: Scope ---
+import { ModuleScopeDimKeywordInspection } from './declaration/module-scope-dim-keyword.js';
+import { EncapsulatePublicFieldInspection } from './declaration/encapsulate-public-field.js';
+import { MoveFieldCloserToUsageInspection } from './declaration/move-field-closer-to-usage.js';
+
+// --- Tier B: Functions ---
+import { FunctionReturnValueNotUsedInspection } from './declaration/function-return-value-not-used.js';
+import { FunctionReturnValueAlwaysDiscardedInspection } from './declaration/function-return-value-always-discarded.js';
+import { ProcedureCanBeWrittenAsFunctionInspection } from './declaration/procedure-can-be-written-as-function.js';
+
+// --- Tier B: Parameters ---
+import { ExcessiveParametersInspection } from './declaration/excessive-parameters.js';
+import { ParameterCanBeByValInspection } from './declaration/parameter-can-be-byval.js';
+
+// --- Tier B: Usage ---
+import { UnassignedVariableUsageInspection } from './declaration/unassigned-variable-usage.js';
+
 /**
  * Master registry of all inspection classes.
  * Order does not matter — the runner handles tiering and filtering.
@@ -134,6 +167,39 @@ export const ALL_INSPECTIONS: Array<new () => InspectionBase> = [
   VariableNotUsedInspection,
   ParameterNotUsedInspection,
   NonReturningFunctionInspection,
+
+  // Tier B: Unused Code
+  ConstantNotUsedInspection,
+  ProcedureNotUsedInspection,
+  LineLabelNotUsedInspection,
+  VariableNotAssignedInspection,
+
+  // Tier B: Naming
+  HungarianNotationInspection,
+  UseMeaningfulNameInspection,
+  UnderscoreInPublicClassModuleMemberInspection,
+
+  // Tier B: Types
+  ObjectVariableNotSetInspection,
+  IntegerDataTypeInspection,
+  VariableTypeNotDeclaredInspection,
+
+  // Tier B: Scope
+  ModuleScopeDimKeywordInspection,
+  EncapsulatePublicFieldInspection,
+  MoveFieldCloserToUsageInspection,
+
+  // Tier B: Functions
+  FunctionReturnValueNotUsedInspection,
+  FunctionReturnValueAlwaysDiscardedInspection,
+  ProcedureCanBeWrittenAsFunctionInspection,
+
+  // Tier B: Parameters
+  ExcessiveParametersInspection,
+  ParameterCanBeByValInspection,
+
+  // Tier B: Usage
+  UnassignedVariableUsageInspection,
 ];
 
 /**
