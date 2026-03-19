@@ -34,7 +34,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.12.1",
+    "@modelcontextprotocol/sdk": "^1.27.1",
     "antlr4ng": "3.0.16",
     "micromatch": "4.0.8",
     "pino": "9.6.0",
