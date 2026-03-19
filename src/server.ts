@@ -9,6 +9,7 @@ import { warmUpParser } from './parser/index.js';
 import { handleParseTool } from './tools/parse.js';
 import { handleInspectTool } from './tools/inspect.js';
 import { handleListInspections } from './tools/list-inspections.js';
+import { handleInspectWorkspaceTool } from './tools/inspect-workspace.js';
 import { validateRegistry } from './inspections/registry.js';
 import { z } from 'zod';
 
@@ -76,10 +77,9 @@ async function main() {
       limit: z.number().default(100).describe('Maximum number of results to return'),
       detailed: z.boolean().default(false).describe('Return full results instead of summary'),
     },
-    async (_input) => {
-      return {
-        content: [{ type: 'text' as const, text: 'vba/inspect-workspace not yet implemented. Coming in Phase 5.' }],
-      };
+    async (input) => {
+      logger.info({ tool: 'vba/inspect-workspace', path: input.path }, 'Tool call');
+      return handleInspectWorkspaceTool(input);
     },
   );
 
