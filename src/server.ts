@@ -113,6 +113,10 @@ async function main() {
     logger.error({ err }, 'Uncaught exception — exiting');
     process.exit(1);
   });
+  process.on('unhandledRejection', (reason) => {
+    logger.error({ reason }, 'Unhandled promise rejection — exiting');
+    process.exit(1);
+  });
 
   // Start MCP server on stdio
   const transport = new StdioServerTransport();
