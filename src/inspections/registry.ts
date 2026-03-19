@@ -65,6 +65,11 @@ import { ApplicationWorksheetFunctionInspection } from './parse-tree/excel/appli
 import { ExcelMemberMayReturnNothingInspection } from './parse-tree/excel/excel-member-may-return-nothing.js';
 import { ExcelUdfNameIsValidCellReferenceInspection } from './parse-tree/excel/excel-udf-name-is-valid-cell-reference.js';
 
+// --- Tier B: Declaration-based ---
+import { VariableNotUsedInspection } from './declaration/variable-not-used.js';
+import { ParameterNotUsedInspection } from './declaration/parameter-not-used.js';
+import { NonReturningFunctionInspection } from './declaration/non-returning-function.js';
+
 /**
  * Master registry of all inspection classes.
  * Order does not matter — the runner handles tiering and filtering.
@@ -125,7 +130,10 @@ export const ALL_INSPECTIONS: Array<new () => InspectionBase> = [
   ExcelMemberMayReturnNothingInspection,
   ExcelUdfNameIsValidCellReferenceInspection,
 
-  // Tier B inspections added in Phase 4
+  // Tier B: Declaration-based
+  VariableNotUsedInspection,
+  ParameterNotUsedInspection,
+  NonReturningFunctionInspection,
 ];
 
 /**

@@ -4,6 +4,7 @@
 
 import type { ParseResult } from '../parser/index.js';
 import type { InspectionResult, Severity, InspectionCategory, InspectionTier } from './types.js';
+import type { DeclarationFinder } from '../symbols/declaration-finder.js';
 
 /**
  * Context provided to inspections during execution.
@@ -12,9 +13,7 @@ export interface InspectionContext {
   /** Parse result with tree and tokens */
   parseResult: ParseResult;
   /** Declaration finder — only available for Tier B inspections */
-  // declarationFinder?: DeclarationFinder;  // Phase 3
-  /** Workspace context — only available for cross-module inspection */
-  // workspace?: WorkspaceContext;  // Phase 3
+  declarationFinder?: DeclarationFinder;
 }
 
 /**

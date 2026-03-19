@@ -6,6 +6,7 @@ import { parseCode } from '../parser/index.js';
 import { createAllInspections } from '../inspections/registry.js';
 import { runInspections } from '../inspections/runner.js';
 import type { InspectionResponse, Severity } from '../inspections/types.js';
+import { buildSingleModuleFinder } from '../symbols/workspace.js';
 
 const VERSION = '0.1.0';
 
@@ -24,13 +25,16 @@ export function handleInspectTool(input: InspectToolInput) {
   try {
     const parseResult = parseCode(input.code);
     const inspections = createAllInspections();
-    const context = { parseResult };
+
+    // Build symbol table for Tier B inspections
+    const declarationFinder = buildSingleModuleFinder(parseResult);
+    const context = { parseResult, declarationFinder };
 
     const { results, errors, skipped } = runInspections(inspections, context, {
       minSeverity: input.severity as Severity | undefined,
       categories: input.categories,
       hostLibraries: input.hostLibraries,
-      hasSymbolTable: false, // Phase 3 will enable this
+      hasSymbolTable: true,
     });
 
     const elapsed = Date.now() - startTime;
