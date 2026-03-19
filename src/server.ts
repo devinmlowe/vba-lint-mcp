@@ -6,7 +6,10 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { logger } from './logger.js';
 import { warmUpParser } from './parser/index.js';
-import { parseToolSchema, handleParseTool } from './tools/parse.js';
+import { handleParseTool } from './tools/parse.js';
+import { handleInspectTool } from './tools/inspect.js';
+import { handleListInspections } from './tools/list-inspections.js';
+import { validateRegistry } from './inspections/registry.js';
 import { z } from 'zod';
 
 const VERSION = '0.1.0';
@@ -14,6 +17,12 @@ const VERSION = '0.1.0';
 async function main() {
   const startTime = Date.now();
   logger.info({ version: VERSION }, 'vba-lint-mcp starting');
+
+  // Validate inspection registry
+  const registryErrors = validateRegistry();
+  if (registryErrors.length > 0) {
+    logger.error({ errors: registryErrors }, 'Inspection registry validation failed');
+  }
 
   // Warm up ANTLR4 parser (initializes ATN/DFA caches)
   warmUpParser();
@@ -39,7 +48,7 @@ async function main() {
     },
   );
 
-  // Register vba/inspect tool (placeholder — implemented in Phase 2)
+  // Register vba/inspect tool
   server.tool(
     'vba/inspect',
     'Run VBA code inspections and return diagnostics with severity, location, and suggested fixes.',
@@ -49,10 +58,9 @@ async function main() {
       severity: z.enum(['error', 'warning', 'suggestion', 'hint']).optional().describe('Minimum severity to include'),
       categories: z.array(z.string()).optional().describe('Filter by inspection categories'),
     },
-    async (_input) => {
-      return {
-        content: [{ type: 'text' as const, text: 'vba/inspect not yet implemented. Coming in Phase 2.' }],
-      };
+    async (input) => {
+      logger.info({ tool: 'vba/inspect', codeLength: input.code.length }, 'Tool call');
+      return handleInspectTool(input);
     },
   );
 
@@ -75,7 +83,7 @@ async function main() {
     },
   );
 
-  // Register vba/list-inspections tool (placeholder — implemented in Phase 2)
+  // Register vba/list-inspections tool
   server.tool(
     'vba/list-inspections',
     'List all available VBA inspections with their descriptions, severities, and categories.',
@@ -84,10 +92,9 @@ async function main() {
       category: z.string().optional().describe('Filter by category'),
       tier: z.enum(['A', 'B']).optional().describe('Filter by tier (A=parse-tree, B=symbol-aware)'),
     },
-    async (_input) => {
-      return {
-        content: [{ type: 'text' as const, text: 'vba/list-inspections not yet implemented. Coming in Phase 2.' }],
-      };
+    async (input) => {
+      logger.info({ tool: 'vba/list-inspections' }, 'Tool call');
+      return handleListInspections(input);
     },
   );
 
