@@ -1,0 +1,19 @@
+# vba-lint-mcp — Docker Compose for local usage
+#
+# Build:   docker compose build
+# Run:     docker compose run --rm vba-lint
+#
+# The MCP server uses stdio transport (stdin/stdout JSON-RPC),
+# so it must be run with `docker compose run` (interactive),
+# not `docker compose up` (detached).
+
+services:
+  vba-lint:
+    build: .
+    stdin_open: true
+    environment:
+      - VBA_LINT_LOG_LEVEL=warn
+    # Mount a local VBA project directory for workspace scanning
+    # Uncomment and adjust the path as needed:
+    # volumes:
+    #   - ./my-vba-project:/data:ro
