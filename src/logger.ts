@@ -8,12 +8,11 @@ import pino from 'pino';
  * stdout is reserved for MCP JSON-RPC protocol messages.
  *
  * Log level configurable via VBA_LINT_LOG_LEVEL env var.
- * Defaults to 'info'.
+ * Defaults to 'info'. Set to 'silent' to suppress all logging.
  */
-export const logger = pino({
-  level: process.env.VBA_LINT_LOG_LEVEL ?? 'info',
-  transport: {
-    target: 'pino/file',
-    options: { destination: 2 }, // fd 2 = stderr
+export const logger = pino(
+  {
+    level: process.env.VBA_LINT_LOG_LEVEL ?? 'info',
   },
-});
+  pino.destination({ dest: 2, sync: false }), // fd 2 = stderr
+);
