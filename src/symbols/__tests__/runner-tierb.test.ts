@@ -7,6 +7,45 @@ import { runInspections } from '../../inspections/runner.js';
 import { createAllInspections } from '../../inspections/registry.js';
 import { buildSingleModuleFinder } from '../workspace.js';
 
+describe('Runner host library filtering', () => {
+  it('runs Excel inspections with lowercase hostLibraries option', () => {
+    // Excel inspections have meta.hostLibraries: ['Excel'] (capital E)
+    // but the default option is ['excel'] (lowercase)
+    const code = 'Sub Test()\n    Cells(1, 1).Value = 1\nEnd Sub\n';
+    const parseResult = parseCode(code);
+    const inspections = createAllInspections();
+    const context = { parseResult };
+
+    const { results } = runInspections(inspections, context, {
+      hostLibraries: ['excel'],
+      hasSymbolTable: false,
+    });
+
+    // Should find ImplicitActiveSheetReference for bare Cells reference
+    const excelResults = results.filter(r =>
+      r.inspection === 'ImplicitActiveSheetReference',
+    );
+    expect(excelResults.length).toBeGreaterThan(0);
+  });
+
+  it('excludes Excel inspections when host is not in the list', () => {
+    const code = 'Sub Test()\n    Cells(1, 1).Value = 1\nEnd Sub\n';
+    const parseResult = parseCode(code);
+    const inspections = createAllInspections();
+    const context = { parseResult };
+
+    const { results } = runInspections(inspections, context, {
+      hostLibraries: ['access'],
+      hasSymbolTable: false,
+    });
+
+    const excelResults = results.filter(r =>
+      r.inspection === 'ImplicitActiveSheetReference',
+    );
+    expect(excelResults).toHaveLength(0);
+  });
+});
+
 describe('Runner Tier B behavior', () => {
   it('skips Tier B inspections when no symbol table', () => {
     const code = 'Sub Test()\n    Dim x As Long\nEnd Sub\n';

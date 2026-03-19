@@ -57,9 +57,12 @@ export function runInspections(
     const meta = inspection.meta;
 
     // Host filtering: skip inspections for hosts not in the active set
+    // Case-insensitive comparison — meta.hostLibraries may use 'Excel'
+    // while options.hostLibraries defaults to 'excel'
     if (meta.hostLibraries && options.hostLibraries) {
+      const lowerHostLibs = options.hostLibraries.map(h => h.toLowerCase());
       const hasMatchingHost = meta.hostLibraries.some(h =>
-        options.hostLibraries!.includes(h),
+        lowerHostLibs.includes(h.toLowerCase()),
       );
       if (!hasMatchingHost) continue;
     }
