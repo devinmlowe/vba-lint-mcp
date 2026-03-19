@@ -14,7 +14,6 @@ Rubberduck is licensed under the GNU General Public License v3.0. In compliance 
 |---|---|---|
 | `grammar/VBALexer.g4` | `Rubberduck.Parsing/Grammar/VBALexer.g4` | Direct copy |
 | `grammar/VBAParser.g4` | `Rubberduck.Parsing/Grammar/VBAParser.g4` | Direct copy |
-| `src/resources/en/*.json` | `Rubberduck.Resources/Inspections/*.resx` | Extracted and reformatted |
 | `src/inspections/**/*.ts` | `Rubberduck.CodeAnalysis/Inspections/Concrete/*.cs` | Logic translated C# → TypeScript |
 | `src/symbols/declaration.ts` | `Rubberduck.Parsing/Model/Symbols/Declaration.cs` | Architecture ported |
 
@@ -22,7 +21,7 @@ Rubberduck is licensed under the GNU General Public License v3.0. In compliance 
 
 Grammar and inspection logic derived from Rubberduck v2 repository:
 - **Repository:** https://github.com/rubberduck-vba/Rubberduck
-- **Commit:** (to be pinned during grammar integration — Issue #2)
+- **Commit:** `fae50adab188126a5e7d2a1cefc3328cc18af482`
 - **License:** GPL-3.0
 
 ### Rubberduck Contributors
