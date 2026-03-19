@@ -220,20 +220,6 @@ These inspections require symbol resolution (declaration collection + reference 
 
 ## Configuration
 
-### `.vbalintrc.json`
-
-Place a `.vbalintrc.json` file in your project root to customize behavior:
-
-```json
-{
-  "hostLibraries": ["excel"],
-  "severity": {
-    "EmptyIfBlock": "error",
-    "StepNotSpecified": "off"
-  }
-}
-```
-
 ### Host Libraries
 
 The `hostLibraries` parameter controls which host-specific inspections run. Default is `["excel"]`. Excel-specific inspections (ImplicitActiveSheetReference, etc.) only run when `"excel"` is included.
@@ -251,9 +237,27 @@ generated/**
 test/**
 ```
 
-### Inspection Suppression
+## Planned Features
 
-Use `@Ignore` annotations in VBA comments to suppress specific inspections:
+The following features are designed but **not yet implemented**:
+
+### `.vbalintrc.json` (planned)
+
+Project-level configuration file for customizing severity overrides and default host libraries:
+
+```json
+{
+  "hostLibraries": ["excel"],
+  "severity": {
+    "EmptyIfBlock": "error",
+    "StepNotSpecified": "off"
+  }
+}
+```
+
+### `@Ignore` Annotation Suppression (planned)
+
+Inline suppression of specific inspections using VBA comment annotations:
 
 ```vba
 '@Ignore EmptyIfBlock
